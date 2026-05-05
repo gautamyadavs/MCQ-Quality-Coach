@@ -1,6 +1,6 @@
 ---
 name: mcq-quality-coach
-description: Generates, audits, and revises multiple-choice questions against the 19 item-writing flaw criteria. Use when creating, reviewing, fixing, or evaluating MCQs, quiz, or assessment items.
+description: Generates, audits, and revises multiple-choice questions against the 19 item-writing flaw criteria. Use when creating, reviewing, or evaluating MCQs, quiz questions, test items, or assessment items.
 ---
 
 # MCQ Quality Coach
