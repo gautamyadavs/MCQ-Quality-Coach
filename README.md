@@ -45,7 +45,7 @@ All three platforms use the same files in this repo. The only difference is whic
 
 Easiest install if your plan supports it. Auto-triggers on MCQ requests, validator runs via Code Interpreter.
 
-1. Download the [latest release](https://github.com/YOUR_USERNAME/mcq-quality-coach/releases) — grab `mcq-quality-coach.zip`.
+1. Download the [latest release](https://github.com/gautamyadavs/mcq-quality-coach/releases) — grab `mcq-quality-coach.zip`.
 2. In ChatGPT, click your profile icon → **Skills**.
 3. Click **Add new skill** → **Upload from your computer** → select the zip.
 4. Open a new chat: *"Generate an MCQ for this learning objective: [your LO]"*
@@ -84,7 +84,7 @@ The validator script doesn't auto-run in Custom GPTs. Code Interpreter can run i
 Best if you work in a terminal. Full skill support including auto-running validator.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mcq-quality-coach.git
+git clone https://github.com/gautamyadavs/mcq-quality-coach.git
 mkdir -p ~/.codex/skills
 cp -r mcq-quality-coach ~/.codex/skills/
 ```
@@ -97,7 +97,7 @@ Codex CLI auto-discovers the skill on next launch. Behavior is identical to Clau
 
 Easiest install — auto-triggers on MCQ requests.
 
-1. Download the [latest release](https://github.com/YOUR_USERNAME/mcq-quality-coach/releases) — grab `mcq-quality-coach.zip`.
+1. Download the [latest release](https://github.com/gautamyadavs/mcq-quality-coach/releases) — grab `mcq-quality-coach.zip`.
 2. In Claude.ai: **Settings → Capabilities → enable Code Execution**.
 3. Go to **Customize → Skills → Upload skill** → upload the zip.
 4. Open a new chat: *"Generate an MCQ for this learning objective: [your LO]"*
@@ -107,7 +107,7 @@ The skill auto-triggers on MCQ-related prompts. Validator runs automatically.
 #### Option 2: Claude Code (developer terminal)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mcq-quality-coach.git
+git clone https://github.com/gautamyadavs/mcq-quality-coach.git
 mkdir -p ~/.claude/skills
 cp -r mcq-quality-coach ~/.claude/skills/
 ```
@@ -211,32 +211,6 @@ Per-criterion guidance with examples is in [`references/19-iwf-rubric.md`](refer
 - **Not a psychometric validator.** Item discrimination, difficulty parameters, and IRT analysis require student response data.
 - **Not a content authority.** Subject-matter accuracy depends on the underlying model's knowledge. For specialized domains, treat outputs as draft material requiring expert verification.
 
-## Running the validator standalone
-
-The Python validator works without any LLM:
-
-```bash
-echo '{
-  "stem": "What process is engaged during retrieval practice?",
-  "options": [
-    "Recognition of familiar material",
-    "Retrieval of information from long-term memory",
-    "Encoding of new information",
-    "Consolidation during sleep"
-  ],
-  "correct_index": 1
-}' | python scripts/validate.py --stdin
-```
-
-Output is JSON. Useful for batch-validating existing question banks regardless of which LLM you used to generate them.
-
-## Roadmap
-
-- [ ] Multilingual rubric examples (currently English only)
-- [ ] Domain reference packs (medical, legal, technical certification)
-- [ ] Stronger semantic checks via small embedding models for #2 plausibility and #7 convergence
-- [ ] Batch-mode for generating aligned item sets across a learning objective taxonomy
-
 ## Contributing
 
 Issues and PRs welcome. Particularly interested in false-positive reductions in the validator, domain-specific reference packs, and eval set contributions.
@@ -254,7 +228,7 @@ Issues and PRs welcome. Particularly interested in false-positive reductions in 
 ## Citation
 
 ```
-[YOUR_NAME]. (2026). MCQ Quality Coach: An open-standard Agent Skill for
+Gautam Yadav. (2026). MCQ Quality Coach: An open-standard Agent Skill for
 item-writing flaw detection across ChatGPT, Claude, and Gemini.
-GitHub. https://github.com/YOUR_USERNAME/mcq-quality-coach
+GitHub. https://github.com/gautamyadavs/mcq-quality-coach
 ```
