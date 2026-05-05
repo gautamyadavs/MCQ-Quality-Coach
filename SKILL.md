@@ -1,6 +1,6 @@
 ---
 name: mcq-quality-coach
-description: Generates, audits, and revises multiple-choice questions against the 19 item-writing flaw (IWF) criteria. Use whenever the user asks to create, review, fix, or evaluate MCQs, quiz questions, test items, or assessment items — including requests like "write quiz questions on X," "is this a good MCQ," or "turn this learning objective into a question." Produces an auditable item with instructor rationales, learner-facing feedback, and misconception tags.
+description: Generates, audits, and revises multiple-choice questions against the 19 item-writing flaw criteria. Use when creating, reviewing, fixing, or evaluating MCQs, quiz, or assessment items.
 ---
 
 # MCQ Quality Coach
