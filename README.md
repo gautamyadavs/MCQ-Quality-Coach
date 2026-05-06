@@ -311,9 +311,15 @@ Issues and PRs welcome. Particularly interested in false-positive reductions in 
 
 ## Acknowledgments
 
-- Tarrant et al. (2006) — the foundational 19-criterion rubric.
-- Moore & Chen (2023) — the SAQUET hybrid validation approach.
-- Downing (2005) — empirical evidence on the impact of item-writing flaws.
+- **Tarrant et al. (2006)** — the foundational 19-criterion rubric.
+- **Moore & Chen (2023)** — the SAQUET hybrid validation approach.
+- **Downing (2005)** — empirical evidence on the impact of item-writing flaws.
+- **Vegada et al. (2016)** — randomized comparison of three-, four-, and five-option MCQs; recommends three options as the evidence-based default for item quality and student time-on-task.
+
+## References
+
+- Tarrant M, Knierim A, Hayes SK, Ware J. The frequency of item writing flaws in multiple-choice questions used in high stakes nursing assessments. *Nurse Educ Today*. 2006 Dec;26(8):662-71. doi: 10.1016/j.nedt.2006.07.006. PMID: 17014932.
+- Vegada B, Shukla A, Khilnani A, Charan J, Desai C. Comparison between three option, four option and five option multiple choice question tests for quality parameters: A randomized study. *Indian J Pharmacol*. 2016 Sep-Oct;48(5):571-575. doi: 10.4103/0253-7613.190757. PMID: 27721545; PMCID: PMC5051253.
 
 ## Citation
 

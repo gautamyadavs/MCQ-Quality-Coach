@@ -140,12 +140,21 @@ A few things in the trace are real but worth understanding:
   re-ran. This is an environment issue, not a skill bug. If you run
   the validator standalone, use `python3`.
 
-- **The questions have 3 options, not 4.** The skill is configurable
-  here — it can produce 4-option items as well. This particular run
-  produced 3-option items, which the validator accepts because no
-  IWF criterion requires 4 options specifically. If you want
-  4-option items, ask for them explicitly: *"Write three 4-option
-  quiz questions about..."*
+- **The questions have 3 options, not 4.** Three-option items are the
+  evidence-based default in this skill. Vegada et al. (2016) randomly
+  compared three-, four-, and five-option MCQs and found no
+  significant performance difference between them — and recommended
+  three options as the default, since adding more options costs
+  student reading time without improving measurement quality. Adding
+  a fourth option typically introduces an implausible distractor that
+  students discard immediately, which costs time without measuring
+  anything new.
+
+  > Vegada B, Shukla A, Khilnani A, Charan J, Desai C. Comparison
+  > between three option, four option and five option multiple choice
+  > question tests for quality parameters: A randomized study.
+  > *Indian J Pharmacol*. 2016 Sep-Oct;48(5):571-575.
+  > doi: 10.4103/0253-7613.190757. PMID: 27721545; PMCID: PMC5051253.
 
 - **Different runs produce different items.** The skill enforces
   process and quality, not specific outputs. If you run the same
