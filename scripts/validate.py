@@ -28,7 +28,7 @@ import sys
 from typing import Optional
 
 
-# Criteria covered deterministically. Others (1, 2, 7, 13, 18) are
+# Criteria covered deterministically. Others (1, 2, 5, 7, 8, 13, 18) are
 # semantic and left to the LLM audit.
 DETERMINISTIC_CRITERIA = [3, 4, 6, 9, 10, 11, 12, 14, 15, 16, 17, 19]
 
@@ -387,8 +387,8 @@ def validate_item(item: dict) -> dict:
             "flagged_count": len(flagged),
             "minor_risk_count": len(minor),
             "deterministic_criteria_checked": len(DETERMINISTIC_CRITERIA),
-            "semantic_criteria_remaining": [1, 2, 7, 13, 18],
-            "note": "Criteria 1, 2, 7, 13, 18 require LLM-based semantic evaluation in the next audit step.",
+            "semantic_criteria_remaining": [1, 2, 5, 7, 8, 13, 18],
+            "note": "Criteria 1, 2, 5, 7, 8, 13, and 18 require LLM-based semantic evaluation in the next audit step.",
         },
         "results": results,
     }
