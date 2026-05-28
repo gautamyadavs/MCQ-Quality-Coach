@@ -24,14 +24,14 @@ If you've used Custom GPTs or generic prompts to make MCQs, you know they look f
 
 ## Why a hybrid approach
 
-The SAQUET research (Moore & Chen, 2023) showed that combining **deterministic rule checks** with **LLM semantic evaluation** catches **91%** of item-writing flaws — vs. **79%** for LLM-only evaluation.
+The SAQUET research (Moore & Chen, 2023) showed that combining **deterministic rule checks** with **LLM semantic evaluation** caught **91%** of item-writing flaws in the cited SAQUET study — vs. **79%** for LLM-only evaluation.
 
 This skill implements that hybrid:
 
 - A bundled Python validator catches **12 of 19 IWFs** that pattern-match cleanly (length cues, NOTA/AOTA, negation words, K-type combinations, numerical order, word repeats, etc.)
 - The LLM handles the **remaining 7 IWFs** that require semantic judgment (#1 ambiguity, #2 implausible distractors, #5 gratuitous information, #7 convergence cues, #8 logical clues, #13 unfocused stems, #18 multiple defensible answers)
 
-The skill's instructions tell the assistant to run `scripts/validate.py` whenever code execution is available (Claude.ai with Code Execution enabled, Claude Code, ChatGPT Codex CLI). Whether it actually runs depends on the host environment's permissions and the model's compliance with the skill instructions. In Custom GPTs and Gemini Gems, you can still run the validator manually — it's just not invoked automatically by default.
+The skill's instructions tell the assistant to run `scripts/validate.py` whenever code execution is available. Whether it actually runs depends on the host environment's permissions and the model's compliance with the skill instructions. In Custom GPTs and Gemini Gems, you can still run the validator manually — it's just not invoked automatically by default.
 
 ---
 
@@ -51,9 +51,9 @@ All three platforms use the same files in this repo. The only difference is whic
 
 ### ChatGPT
 
-#### Option 1: ChatGPT Skills (Business, Enterprise, Edu, Teachers, Healthcare plans)
+#### Option 1: ChatGPT Skills (supported plans and workspaces)
 
-Easiest install if your plan supports it. The skill description triggers it on MCQ-related requests; the skill instructions tell ChatGPT to run the validator when code execution is available in the session.
+Easiest install if Skills are available in your workspace. The skill description triggers it on MCQ-related requests; the skill instructions tell ChatGPT to run the validator when code execution is available in the session.
 
 1. Get the skill zip: download the [latest release](https://github.com/gautamyadavs/mcq-quality-coach/releases) (grab `mcq-quality-coach.zip`), or build it yourself by cloning and zipping the folder so it stays as the top-level entry inside the zip:
 
@@ -68,7 +68,7 @@ Easiest install if your plan supports it. The skill description triggers it on M
 
 To explicitly invoke the skill, ask: *"Use the MCQ Quality Coach skill to generate an MCQ for…"*
 
-> Skills are currently in beta and not yet available on ChatGPT Plus, Pro, or Free plans. If you're on one of those, use Option 2 below.
+> Skill availability varies by plan and workspace and can change over time. If Skills are not available in your workspace, use Option 2 below.
 
 #### Option 2: Custom GPT (chatgpt.com — Plus/Pro, or for GPT Store publishing)
 
@@ -93,7 +93,7 @@ Requires: ChatGPT Plus, Team, or Enterprise. Builder Profile configured (Setting
 8. **Additional Settings:** if available, enable the option that prevents users from extracting the GPT's instructions. The exact label changes with OpenAI's UI updates.
 9. Click **Save** → choose **Anyone with a link** for soft launch, or **Everyone** to publish publicly.
 
-The validator script doesn't run automatically in Custom GPTs. The simplest workflow is to upload `scripts/validate.py` as an additional knowledge file, then ask the GPT: *"Run validate.py on this item and show me the report."*
+The validator script may not run automatically in Custom GPTs. The simplest workflow is to upload `scripts/validate.py` as an additional knowledge file, then ask the GPT: *"Run validate.py on this item and show me the report."*
 
 #### Option 3: Codex CLI (developer terminal)
 
@@ -178,7 +178,7 @@ Custom Gems require an eligible Google account tier. Check Google's [Gem help do
 5. Click **Preview** to test, then **Save**.
 6. Optionally **Share** with specific people via the share menu.
 
-The validator script doesn't run automatically in Gems. Upload `scripts/validate.py` as a knowledge file (if your Gem tier supports it), then ask Gemini: *"Run validate.py on this draft item and show me the report."* If your tier doesn't support code execution, run the validator locally instead — see [Running the validator standalone](#running-the-validator-standalone) below.
+The validator script may not run automatically in Gems. Upload `scripts/validate.py` as a knowledge file (if your Gem tier supports it), then ask Gemini: *"Run validate.py on this draft item and show me the report."* If your tier doesn't support code execution, run the validator locally instead — see [Running the validator standalone](#running-the-validator-standalone) below.
 
 #### Option 2: Gemini API (developers)
 
@@ -250,6 +250,12 @@ mcq-quality-coach/
 
 Per-criterion guidance with examples is in [`references/19-iwf-rubric.md`](references/19-iwf-rubric.md).
 
+## Evidence stance and psychometric guardrails
+
+MCQ Quality Coach uses the 19 item-writing flaw rubric as a pre-deployment screening framework, not as psychometric validation. It can improve design-based evidence by checking alignment, content accuracy, single-best-answer quality, plausible distractors, cognitive demand, estimated difficulty, likely discrimination, and fairness/accessibility concerns.
+
+It does not prove that an item is valid, reliable, appropriately difficult, or discriminating. Those claims require learner-response data, and high-stakes or specialized content requires SME review. When response data are available, analyze difficulty, discrimination, distractor functioning, reliability/precision, subgroup patterns, and revision or retirement decisions.
+
 ## What this skill is not
 
 - **Not a replacement for SME review on high-stakes items.** The skill marks specialized topics as "Requires SME verification" regardless of audit results.
@@ -311,15 +317,9 @@ Issues and PRs welcome. Particularly interested in false-positive reductions in 
 
 ## Acknowledgments
 
-- **Tarrant et al. (2006)** — the foundational 19-criterion rubric.
-- **Moore & Chen (2023)** — the SAQUET hybrid validation approach.
-- **Downing (2005)** — empirical evidence on the impact of item-writing flaws.
-- **Vegada et al. (2016)** — randomized comparison of three-, four-, and five-option MCQs; recommends three options as the evidence-based default for item quality and student time-on-task.
-
-## References
-
-- Tarrant M, Knierim A, Hayes SK, Ware J. The frequency of item writing flaws in multiple-choice questions used in high stakes nursing assessments. *Nurse Educ Today*. 2006 Dec;26(8):662-71. doi: 10.1016/j.nedt.2006.07.006. PMID: 17014932.
-- Vegada B, Shukla A, Khilnani A, Charan J, Desai C. Comparison between three option, four option and five option multiple choice question tests for quality parameters: A randomized study. *Indian J Pharmacol*. 2016 Sep-Oct;48(5):571-575. doi: 10.4103/0253-7613.190757. PMID: 27721545; PMCID: PMC5051253.
+- Tarrant et al. (2006) — the foundational 19-criterion rubric.
+- Moore & Chen (2023) — the SAQUET hybrid validation approach.
+- Downing (2005) — empirical evidence on the impact of item-writing flaws.
 
 ## Citation
 

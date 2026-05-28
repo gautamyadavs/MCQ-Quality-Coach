@@ -28,7 +28,7 @@ import sys
 from typing import Optional
 
 
-# Criteria covered deterministically. Others (1, 2, 5, 7, 8, 13, 18) are
+# Criteria covered deterministically. Others (1, 2, 7, 13, 18) are
 # semantic and left to the LLM audit.
 DETERMINISTIC_CRITERIA = [3, 4, 6, 9, 10, 11, 12, 14, 15, 16, 17, 19]
 
@@ -120,7 +120,7 @@ def check_10_incomplete_stem(stem: str) -> dict:
 
 def check_11_absolutes(options: list[str]) -> dict:
     """IWF #11: Absolute terms (always, never, all, none, every)."""
-    absolutes = ["always", "never", "all", "none", "every", "must", "no one", "everyone"]
+    absolutes = ["always", "never", "all", "none", "every", "no one", "everyone"]
     pattern = re.compile(r"\b(" + "|".join(absolutes) + r")\b", re.IGNORECASE)
 
     flagged_options = []
@@ -238,38 +238,42 @@ def check_15_grammatical_cue(stem: str, options: list[str]) -> dict:
                 "evidence": f"Stem ends with 'a'; only options {consonant_options} start with consonants",
             }
 
-    # Parallel structure check: do options share grammatical opening?
-    first_words = []
-    for opt in options:
-        m = re.match(r"^\s*(\w+)", opt)
-        if m:
-            first_words.append(m.group(1).lower())
+    # Parallel structure check: classify option openings. This is heuristic and should be
+    # treated as a candidate flag, especially for short 3-option MCQs.
+    def opening_class(option: str) -> str:
+        words = re.findall(r"\b\w+\b", option.lower())
+        if not words:
+            return "empty"
+        first = words[0]
+        second = words[1] if len(words) > 1 else ""
+        if first in {"a", "an", "the"}:
+            return "article+noun-phrase"
+        if first == "to":
+            return "infinitive"
+        if first.endswith("ing"):
+            return "gerund/participle"
+        if first.endswith("ed"):
+            return "past/participle"
+        if first.endswith(("tion", "ment", "ness", "ity")):
+            return "noun-like"
+        if second in {"is", "are", "was", "were", "will", "can", "should"}:
+            return "clause"
+        return "other"
 
-    # Crude: check if first words are all same POS class by suffix heuristic
-    suffixes = {
-        "ing": "gerund/participle",
-        "ed": "past/participle",
-        "tion": "noun",
-        "ment": "noun",
-        "ness": "noun",
-        "ity": "noun",
-    }
-    classes = []
-    for w in first_words:
-        cls = "other"
-        for suf, name in suffixes.items():
-            if w.endswith(suf):
-                cls = name
-                break
-        classes.append(cls)
+    classes = [opening_class(opt) for opt in options]
+    non_other = [c for c in classes if c not in {"other", "empty"}]
+    unique_classes = set(classes)
 
-    if len(set(classes)) >= 4:
-        return {
-            "criterion": 15,
-            "name": "Grammatical cue",
-            "status": "Minor risk",
-            "evidence": f"Options begin with mixed grammatical classes: {classes} — verify parallel structure",
-        }
+    if len(options) >= 3 and len(unique_classes) > 1 and len(non_other) >= 2:
+        counts = {cls: classes.count(cls) for cls in unique_classes}
+        isolated = [cls for cls, count in counts.items() if count == 1 and cls not in {"other", "empty"}]
+        if isolated:
+            return {
+                "criterion": 15,
+                "name": "Grammatical cue",
+                "status": "Minor risk",
+                "evidence": f"Options begin with mixed structures: {classes} — verify parallel structure",
+            }
 
     return {"criterion": 15, "name": "Grammatical cue", "status": "Pass", "evidence": "No obvious grammatical cue"}
 
@@ -334,25 +338,44 @@ def check_17_vague_qualifiers(options: list[str], correct_index: int) -> dict:
 
 def check_19_negative_wording(stem: str) -> dict:
     """IWF #19: Negative wording (NOT, EXCEPT, LEAST) without typographic emphasis."""
-    # Check for unmarked negatives (lowercase or plain)
-    unmarked = re.search(r"\b(not|except|least)\b", stem)
-    marked = re.search(r"\b(NOT|EXCEPT|LEAST)\b", stem) or "**not**" in stem.lower() or "*not*" in stem.lower()
+    matches = []
+    for match in re.finditer(r"\b(not|except|least)\b", stem, flags=re.IGNORECASE):
+        term = match.group(1)
+        window_start = max(0, match.start() - 4)
+        context = stem[window_start:match.end()].lower()
+        if term.lower() == "least" and "at least" in context:
+            continue
+        matches.append(match)
 
-    if unmarked and not marked:
+    if not matches:
+        return {"criterion": 19, "name": "Negative wording", "status": "Pass", "evidence": "Stem is positively worded"}
+
+    marked_terms = []
+    unmarked_terms = []
+    lower_stem = stem.lower()
+    for match in matches:
+        term = match.group(1)
+        term_lower = term.lower()
+        markdown_marked = f"**{term_lower}**" in lower_stem or f"*{term_lower}*" in lower_stem
+        uppercase_marked = term.isupper() and len(term) > 1
+        if markdown_marked or uppercase_marked:
+            marked_terms.append(term)
+        else:
+            unmarked_terms.append(term)
+
+    if unmarked_terms:
         return {
             "criterion": 19,
             "name": "Negative wording",
             "status": "Flagged",
-            "evidence": f"Unmarked negative '{unmarked.group()}' in stem",
+            "evidence": f"Unmarked negative wording detected: {unmarked_terms}",
         }
-    if marked:
-        return {
-            "criterion": 19,
-            "name": "Negative wording",
-            "status": "Minor risk",
-            "evidence": "Negative wording present with emphasis — verify safety-critical or explicit user request",
-        }
-    return {"criterion": 19, "name": "Negative wording", "status": "Pass", "evidence": "Stem is positively worded"}
+    return {
+        "criterion": 19,
+        "name": "Negative wording",
+        "status": "Minor risk",
+        "evidence": f"Negative wording present with emphasis: {marked_terms} — verify safety-critical or explicit user request",
+    }
 
 
 def validate_item(item: dict) -> dict:
@@ -388,7 +411,7 @@ def validate_item(item: dict) -> dict:
             "minor_risk_count": len(minor),
             "deterministic_criteria_checked": len(DETERMINISTIC_CRITERIA),
             "semantic_criteria_remaining": [1, 2, 5, 7, 8, 13, 18],
-            "note": "Criteria 1, 2, 5, 7, 8, 13, and 18 require LLM-based semantic evaluation in the next audit step.",
+            "note": "Criteria 1, 2, 5, 7, 8, 13, 18 require LLM-based semantic evaluation in the next audit step.",
         },
         "results": results,
     }

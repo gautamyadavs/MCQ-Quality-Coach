@@ -3,66 +3,137 @@
   "title": "MCQ Quality Coach Output",
   "description": "Structured output schema for an audited MCQ. Designed for downstream LMS import.",
   "type": "object",
-  "required": ["item", "audit", "rationales", "learner_feedback", "misconception_tags", "quality_status"],
+  "required": [
+    "item",
+    "audit",
+    "rationales",
+    "learner_feedback",
+    "misconception_tags",
+    "quality_status"
+  ],
   "properties": {
     "metadata": {
       "type": "object",
       "properties": {
-        "learning_objective": { "type": "string" },
-        "audience": { "type": "string" },
+        "learning_objective": {
+          "type": "string"
+        },
+        "audience": {
+          "type": "string"
+        },
         "blooms_level": {
           "type": "string",
-          "enum": ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"]
+          "enum": [
+            "Remember",
+            "Understand",
+            "Apply",
+            "Analyze",
+            "Evaluate",
+            "Create"
+          ]
         },
         "difficulty": {
           "type": "string",
-          "enum": ["introductory", "moderate", "advanced", "expert"]
+          "enum": [
+            "introductory",
+            "moderate",
+            "advanced",
+            "expert"
+          ],
+          "description": "Estimated pre-deployment difficulty, not empirical difficulty."
+        },
+        "assessment_target": {
+          "type": "string"
         }
       }
     },
     "item": {
       "type": "object",
-      "required": ["stem", "options", "correct_index"],
+      "required": [
+        "stem",
+        "options",
+        "correct_index"
+      ],
       "properties": {
-        "stem": { "type": "string" },
+        "stem": {
+          "type": "string"
+        },
         "options": {
           "type": "array",
-          "items": { "type": "string" },
-          "minItems": 2
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3
         },
-        "correct_index": { "type": "integer", "minimum": 0 }
+        "correct_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based index of the single best answer."
+        }
       }
     },
     "audit": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["criterion", "name", "status", "evidence"],
+        "required": [
+          "criterion",
+          "name",
+          "status",
+          "evidence"
+        ],
         "properties": {
-          "criterion": { "type": "integer", "minimum": 1, "maximum": 19 },
-          "name": { "type": "string" },
+          "criterion": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 19
+          },
+          "name": {
+            "type": "string"
+          },
           "status": {
             "type": "string",
-            "enum": ["Pass", "Minor risk", "Flagged", "Not applicable"]
+            "enum": [
+              "Pass",
+              "Minor risk",
+              "Flagged",
+              "Not applicable"
+            ]
           },
-          "evidence": { "type": "string" },
-          "fix": { "type": "string" }
+          "evidence": {
+            "type": "string"
+          },
+          "fix": {
+            "type": "string"
+          }
         }
       }
     },
     "rationales": {
       "type": "object",
-      "required": ["correct", "distractors"],
+      "required": [
+        "correct",
+        "distractors"
+      ],
       "properties": {
-        "correct": { "type": "string" },
+        "correct": {
+          "type": "string"
+        },
         "distractors": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["index", "rationale"],
+            "required": [
+              "index",
+              "rationale"
+            ],
             "properties": {
-              "index": { "type": "integer" },
-              "rationale": { "type": "string" }
+              "index": {
+                "type": "integer"
+              },
+              "rationale": {
+                "type": "string"
+              }
             }
           }
         }
@@ -70,17 +141,31 @@
     },
     "learner_feedback": {
       "type": "object",
-      "required": ["correct", "incorrect"],
+      "required": [
+        "correct",
+        "incorrect"
+      ],
       "properties": {
-        "correct": { "type": "string", "description": "Begins with 'Correct.'" },
+        "correct": {
+          "type": "string",
+          "description": "Begins with 'Correct.'"
+        },
         "incorrect": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["index", "feedback"],
+            "required": [
+              "index",
+              "feedback"
+            ],
             "properties": {
-              "index": { "type": "integer" },
-              "feedback": { "type": "string", "description": "Begins with 'Incorrect.' and includes the correct answer reference" }
+              "index": {
+                "type": "integer"
+              },
+              "feedback": {
+                "type": "string",
+                "description": "Begins with 'Incorrect.' and includes the correct answer reference"
+              }
             }
           }
         }
@@ -88,7 +173,9 @@
     },
     "misconception_tags": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "minItems": 2,
       "maxItems": 4
     },
@@ -101,6 +188,53 @@
         "Reject and Rewrite",
         "Requires SME verification"
       ]
+    },
+    "deterministic_precheck": {
+      "type": "object",
+      "description": "Validator summary and results from scripts/validate.py, when available."
+    },
+    "adversarial_pre_audit": {
+      "type": "string",
+      "description": "Notes on whether a test-wise learner could infer the answer from surface cues."
+    },
+    "revision_decision": {
+      "type": "string",
+      "description": "Brief decision to accept, revise, or recommend manual rewrite."
+    },
+    "content_verification": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "requires_sme_verification",
+        "unverified"
+      ]
+    },
+    "design_psychometric_notes": {
+      "type": "object",
+      "description": "Pre-deployment design-based notes. These are not psychometric validation without learner-response data.",
+      "properties": {
+        "validity_support": {
+          "type": "string"
+        },
+        "reliability_precision_support": {
+          "type": "string"
+        },
+        "estimated_difficulty": {
+          "type": "string"
+        },
+        "discrimination_support": {
+          "type": "string"
+        },
+        "fairness_support": {
+          "type": "string"
+        },
+        "post_deployment_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

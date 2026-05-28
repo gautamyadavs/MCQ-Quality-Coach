@@ -1,0 +1,15 @@
+interface:
+  display_name: MCQ Quality Coach
+  short_description: Generate, audit, and revise multiple-choice questions against
+    learning objectives and the 19 item-writing flaw criteria. Use for MCQs, quiz
+    items, answer choices, rationales, learner feedback, misconception tags, or item-quality
+    review.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

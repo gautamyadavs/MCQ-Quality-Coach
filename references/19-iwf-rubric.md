@@ -1,8 +1,6 @@
 # 19 Item-Writing Flaws Rubric
 
-Reference document for the 19-criteria item-writing flaws (IWF) rubric used in MCQ quality evaluation. Based on Tarrant et al. (2006) and the SAQUET toolkit (Moore & Chen, 2023; updated 2025).
-
-> Tarrant M, Knierim A, Hayes SK, Ware J. The frequency of item writing flaws in multiple-choice questions used in high stakes nursing assessments. *Nurse Educ Today*. 2006 Dec;26(8):662-71. doi: 10.1016/j.nedt.2006.07.006. PMID: 17014932.
+Reference document for the 19-criteria item-writing flaws (IWF) rubric used in MCQ quality evaluation. Based on Item-writing flaw research (2006) and the SAQUET toolkit (Moore & Chen, 2023; updated 2025).
 
 Use this document when running the IWF audit. For each criterion, evaluate the item and assign one of four statuses:
 
